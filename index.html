@@ -1,785 +1,390 @@
 <!DOCTYPE html>
-2
 <html lang="zh-CN">
-3
- 
-4
+
 <head>
-5
 <meta charset="UTF-8">
-6
-<meta name="viewport" content="width=device-width, initial-scale=1">
-7
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>预测性维修智能分析平台</title>
-8
- 
-9
-.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-10
- 
-11
+
+arts/dist/echarts.min.js"></script>
+
 <style>
-12
- 
-13
+
 *{
-14
-margin:0;
-15
-padding:0;
-16
-box-sizing:border-box;
-17
-font-family: "Microsoft YaHei";
-18
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
-19
- 
-20
+
 body{
-21
-background:#081325;
-22
-color:#fff;
-23
-padding:20px;
-24
+    font-family:"Microsoft YaHei",sans-serif;
+    background:#081325;
+    color:#fff;
+    padding:20px;
 }
-25
- 
-26
+
 .header{
-27
-height:80px;
-28
-display:flex;
-29
-justify-content:center;
-30
-align-items:center;
-31
-font-size:32px;
-32
-font-weight:bold;
-33
-letter-spacing:3px;
-34
-margin-bottom:20px;
-35
-color:#4db3ff;
-36
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+    color:#4db3ff;
+    margin-bottom:20px;
 }
-37
- 
-38
-.dashboard{
-39
-display:grid;
-40
-grid-template-columns:repeat(4,1fr);
-41
-gap:15px;
-42
-margin-bottom:20px;
-43
+
+.kpi{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-bottom:20px;
 }
-44
- 
-45
+
 .card{
-46
-background:#10243f;
-47
-border-radius:10px;
-48
-padding:20px;
-49
-box-shadow:0 0 10px rgba(0,160,255,.2);
-50
+    background:#10243f;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 0 10px rgba(0,180,255,.15);
 }
-51
- 
-52
+
 .card h3{
-53
-font-size:16px;
-54
-color:#9cb5d4;
-55
-margin-bottom:12px;
-56
+    color:#9cb5d4;
+    margin-bottom:10px;
 }
-57
- 
-58
+
 .card .value{
-59
-font-size:36px;
-60
-font-weight:bold;
-61
-color:#4db3ff;
-62
+    font-size:36px;
+    font-weight:bold;
+    color:#4db3ff;
 }
-63
- 
-64
-.content{
-65
-display:grid;
-66
-grid-template-columns:2fr 1fr;
-67
-gap:20px;
-68
+
+.layout{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
 }
-69
- 
-70
-.chart-box{
-71
-background:#10243f;
-72
-border-radius:10px;
-73
-padding:15px;
-74
-margin-bottom:20px;
-75
+
+.panel{
+    background:#10243f;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:20px;
 }
-76
- 
-77
+
 .chart{
-78
-height:420px;
-79
+    width:100%;
+    height:400px;
 }
-80
- 
-81
-.right-panel{
-82
-display:flex;
-83
-flex-direction:column;
-84
-gap:20px;
-85
+
+table{
+    width:100%;
+    border-collapse:collapse;
 }
-86
- 
-87
-.table{
-88
-width:100%;
-89
-border-collapse:collapse;
-90
+
+table th{
+    background:#173656;
+    padding:10px;
 }
-91
- 
-92
-.table th{
-93
-background:#18375a;
-94
-padding:10px;
-95
+
+table td{
+    padding:10px;
+    border-bottom:1px solid #203e5f;
+    text-align:center;
 }
-96
- 
-97
-.table td{
-98
-padding:10px;
-99
-text-align:center;
-100
-border-bottom:1px solid #1f3d5f;
-101
-}
-102
- 
-103
+
 .high{
-104
-color:#ff5959;
-105
-font-weight:bold;
-106
+    color:#ff5b5b;
 }
-107
- 
-108
+
 .medium{
-109
-color:#ffd166;
-110
-font-weight:bold;
-111
+    color:#ffd166;
 }
-112
- 
-113
+
 .low{
-114
-color:#00d68f;
-115
-font-weight:bold;
-116
+    color:#00d68f;
 }
-117
- 
-118
+
 .footer{
-119
-margin-top:20px;
-120
-background:#10243f;
-121
-padding:15px;
-122
-border-radius:10px;
-123
+    background:#10243f;
+    border-radius:12px;
+    padding:20px;
+    margin-top:20px;
 }
-124
- 
-125
-.footer ul{
-126
-line-height:2;
-127
-padding-left:20px;
-128
+
+.footer li{
+    margin-bottom:10px;
 }
-129
- 
-130
+
+@media(max-width:1000px){
+
+.layout{
+grid-template-columns:1fr;
+}
+
+}
+
 </style>
-131
- 
-132
+
 </head>
-133
- 
-134
+
 <body>
-135
- 
-136
+
 <div class="header">
-137
 预测性维修智能分析平台
-138
 </div>
-139
- 
-140
-<div class="dashboard">
-141
- 
-142
+
+<div class="kpi">
+
 <div class="card">
-143
 <h3>设备总数</h3>
-144
 <div class="value">38</div>
-145
 </div>
-146
- 
-147
+
 <div class="card">
-148
 <h3>健康设备</h3>
-149
 <div class="value">31</div>
-150
 </div>
-151
- 
-152
+
 <div class="card">
-153
 <h3>预警设备</h3>
-154
 <div class="value" style="color:#ffd166">5</div>
-155
 </div>
-156
- 
-157
+
 <div class="card">
-158
 <h3>高风险设备</h3>
-159
-<div class="value" style="color:#ff5959">2</div>
-160
+<div class="value" style="color:#ff5b5b">2</div>
 </div>
-161
- 
-162
+
 </div>
-163
- 
-164
-<div class="content">
-165
- 
-166
+
+<div class="layout">
+
 <div>
-167
- 
-168
-<div class="chart-box">
-169
-<h3>设备健康度分布</h3>
-170
+
+<div class="panel">
+<h3>设备健康度分析</h3>
 <div id="healthChart" class="chart"></div>
-171
 </div>
-172
- 
-173
-<div class="chart-box">
-174
+
+<div class="panel">
 <h3>关键指标趋势</h3>
-175
 <div id="trendChart" class="chart"></div>
-176
 </div>
-177
- 
-178
+
 </div>
-179
- 
-180
-<div class="right-panel">
-181
- 
-182
-<div class="chart-box">
-183
- 
-184
-<h3>风险设备TOP10</h3>
-185
- 
-186
-<table class="table">
-187
- 
-188
+
+<div>
+
+<div class="panel">
+
+<h3>风险设备 TOP10</h3>
+
+<table>
+
 <tr>
-189
 <th>设备</th>
-190
 <th>健康度</th>
-191
 <th>风险</th>
-192
 </tr>
-193
- 
-194
+
 <tr>
-195
 <td>MC209</td>
-196
 <td>58</td>
-197
 <td class="high">高</td>
-198
 </tr>
-199
- 
-200
+
 <tr>
-201
 <td>MC202</td>
-202
 <td>63</td>
-203
 <td class="high">高</td>
-204
 </tr>
-205
- 
-206
+
 <tr>
-207
 <td>MC101</td>
-208
 <td>69</td>
-209
 <td class="medium">中</td>
-210
 </tr>
-211
- 
-212
+
 <tr>
-213
 <td>MC210</td>
-214
 <td>71</td>
-215
 <td class="medium">中</td>
-216
 </tr>
-217
- 
-218
+
 <tr>
-219
 <td>MC211</td>
-220
 <td>73</td>
-221
 <td class="medium">中</td>
-222
 </tr>
-223
- 
-224
+
 <tr>
-225
 <td>MC206</td>
-226
 <td>80</td>
-227
 <td class="low">低</td>
-228
 </tr>
-229
- 
-230
-<tr>
-231
-<td>MC102</td>
-232
-<td>82</td>
-233
-<td class="low">低</td>
-234
-</tr>
-235
- 
-236
+
 </table>
-237
- 
-238
+
 </div>
-239
- 
-240
- 
-241
-<div class="chart-box">
-242
+
+<div class="panel">
 <h3>设备品牌分布</h3>
-243
-<div id="typeChart" style="height:300px"></div>
-244
+<div id="typeChart" style="height:300px;"></div>
 </div>
-245
- 
-246
+
 </div>
-247
- 
-248
+
 </div>
-249
- 
-250
+
 <div class="footer">
-251
- 
-252
-<h3>AI预测分析结论</h3>
-253
- 
-254
+
+<h3>AI维修建议</h3>
+
 <ul>
-255
- 
-256
-<li>MC209 主轴跳动连续增长，预计未来2季度进入维修区间。</li>
-257
- 
-258
-<li>MC202 主轴磨损明显增加，建议计划性更换轴承。</li>
-259
- 
-260
-<li>MC101 拉刀力持续下降，需检查夹爪及蝶形弹簧状态。</li>
-261
- 
-262
-<li>SW设备整体状态稳定，健康度保持90%以上。</li>
-263
- 
-264
-<li>GROB部分设备存在跳动上升趋势，应列入重点监控名单。</li>
-265
- 
-266
+
+<li>MC209主轴跳动增幅明显，建议安排停机检测。</li>
+
+<li>MC202健康度持续下降，建议检查轴承磨损状态。</li>
+
+<li>MC101拉刀力下降，应检查夹持机构。</li>
+
+<li>GROB部分设备存在风险上升趋势，建议重点监控。</li>
+
+<li>SW设备整体运行状态良好。</li>
+
 </ul>
-267
- 
-268
+
 </div>
-269
- 
-270
+
 <script>
-271
- 
-272
-var healthChart = echarts.init(document.getElementById('healthChart'));
-273
- 
-274
+
+const healthChart = echarts.init(document.getElementById('healthChart'));
+
 healthChart.setOption({
-275
- 
-276
+
 tooltip:{},
-277
- 
-278
+
 xAxis:{
-279
 type:'category',
-280
 data:['MC101','MC102','MC103','MC201','MC202','MC209','MC210','MC211']
-281
 },
-282
- 
-283
+
 yAxis:{
-284
 max:100
-285
 },
-286
- 
-287
+
 series:[{
-288
+
 type:'bar',
-289
+
 data:[69,82,90,88,63,58,71,73],
-290
+
 itemStyle:{
-291
-color:function(param){
-292
- 
-293
-let v=param.value;
-294
- 
-295
-if(v<70) return "#ff5959";
-296
-if(v<85) return "#ffd166";
-297
- 
-298
-return "#00d68f";
-299
- 
-300
+color:function(p){
+
+if(p.value<70) return '#ff5b5b';
+
+if(p.value<85) return '#ffd166';
+
+return '#00d68f';
+
 }
-301
 }
-302
+
 }]
-303
+
 });
-304
- 
-305
- 
-306
-var trendChart = echarts.init(document.getElementById('trendChart'));
-307
- 
-308
+
+const trendChart = echarts.init(document.getElementById('trendChart'));
+
 trendChart.setOption({
-309
- 
-310
+
 tooltip:{
-311
 trigger:'axis'
-312
 },
-313
- 
-314
+
 legend:{
-315
 textStyle:{
-316
-color:"#fff"
-317
+color:'#fff'
 }
-318
 },
-319
- 
-320
+
 xAxis:{
-321
 type:'category',
-322
-data:['2022Q1','2022Q2','2022Q3','2022Q4','2023Q1','2023Q2','2023Q3','2023Q4']
-323
-},
-324
- 
-325
-yAxis:[
-326
-{
-327
-type:'value'
-328
-}
-329
-],
-330
- 
-331
-series:[
-332
- 
-333
-{
-334
-name:'主轴跳动',
-335
-type:'line',
-336
-smooth:true,
-337
-data:[0.01,0.013,0.02,0.04,0.02,0.004,0.002,0.002]
-338
-},
-339
- 
-340
-{
-341
-name:'主轴磨损',
-342
-type:'line',
-343
-smooth:true,
-344
-data:[0.002,0.003,0.003,0.004,0.005,0.005,0.005,0.005]
-345
-},
-346
- 
-347
-{
-348
-name:'拉刀力',
-349
-type:'line',
-350
-smooth:true,
-351
-data:[18,17.5,17.3,17.3,17.7,19,17.5,18.6]
-352
-}
-353
- 
-354
-]
-355
- 
-356
-});
-357
- 
-358
- 
-359
-var typeChart = echarts.init(document.getElementById('typeChart'));
-360
- 
-361
-typeChart.setOption({
-362
- 
-363
-tooltip:{},
-364
- 
-365
-series:[{
-366
-type:'pie',
-367
-radius:['45%','70%'],
-368
- 
-369
 data:[
-370
- 
-371
-{
-372
-value:17,
-373
-name:'GROB'
-374
-},
-375
- 
-376
-{
-377
-value:15,
-378
-name:'SW'
-379
-},
-380
- 
-381
-{
-382
-value:6,
-383
-name:'INDEX'
-384
-}
-385
- 
-386
+'2023Q1',
+'2023Q2',
+'2023Q3',
+'2023Q4',
+'2024Q1',
+'2024Q2',
+'2024Q3',
+'2024Q4'
 ]
-387
-}]
-388
+},
+
+yAxis:{
+type:'value'
+},
+
+series:[
+
+{
+name:'主轴跳动',
+type:'line',
+smooth:true,
+data:[0.01,0.012,0.015,0.018,0.02,0.025,0.03,0.04]
+},
+
+{
+name:'主轴磨损',
+type:'line',
+smooth:true,
+data:[0.005,0.005,0.006,0.007,0.007,0.008,0.009,0.01]
+},
+
+{
+name:'拉刀力',
+type:'line',
+smooth:true,
+data:[20,19.8,19.5,19.2,19,18.8,18.7,18.4]
+}
+
+]
+
 });
-389
- 
-390
+
+const typeChart = echarts.init(document.getElementById('typeChart'));
+
+typeChart.setOption({
+
+tooltip:{},
+
+series:[{
+
+type:'pie',
+
+radius:['40%','70%'],
+
+data:[
+
+{value:17,name:'GROB'},
+{value:15,name:'SW'},
+{value:6,name:'INDEX'}
+
+]
+
+}]
+
+});
+
+window.addEventListener('resize',function(){
+
+healthChart.resize();
+trendChart.resize();
+typeChart.resize();
+
+});
+
 </script>
-391
- 
-392
+
 </body>
-393
 </html>
